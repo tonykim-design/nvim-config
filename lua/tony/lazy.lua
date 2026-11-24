@@ -25,21 +25,48 @@ return require('lazy').setup({
             vim.cmd('colorscheme rose-pine')
         end,
     },
-    {'nvim-treesitter/nvim-treesitter'},
-    {'nvim-treesitter/playground'},
-    {'theprimeagen/harpoon'},
-    {'mbbill/undotree'},
-    {'tpope/vim-fugitive'},
-    -- LSP suppor
-    -- {"williamboman/mason.nvim"},
-    -- {"williamboman/mason-lspconfig.nvim"},
-    {'neovim/nvim-lspconfig'},             -- Required
-    { "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"} },
-    { "folke/neodev.nvim", opts = {} },
-    -- Autocompletion
     {
-        "L3MON4D3/LuaSnip",
-        version = "v2.*",
+        "nvim-treesitter/nvim-treesitter",
+        branch = "main",
+        lazy = false,
+        build = ":TSUpdate",
+        config = function()
+        -- Optional: only needed if you want to customize the parser install directory
+        require("nvim-treesitter").setup({
+                install_dir = vim.fn.stdpath("data") .. "/site",
+                })
+
+        -- Install your required parsers
+            require("nvim-treesitter").install({
+                    "lua",
+                    "vim",
+                    "vimdoc",
+                    "markdown",
+                    "markdown_inline",
+                    -- add your other languages here
+                    })
+
+        -- Enable Neovim's built-in Tree-sitter highlighting for all filetypes with a parser
+            vim.api.nvim_create_autocmd("FileType", {
+                    callback = function(args)
+                    pcall(vim.treesitter.start, args.buf)
+                    end,
+                    })
+        end,
+    },
+    {'theprimeagen/harpoon'},
+        {'mbbill/undotree'},
+        {'tpope/vim-fugitive'},
+        -- LSP suppor
+            -- {"williamboman/mason.nvim"},
+        -- {"williamboman/mason-lspconfig.nvim"},
+        {'neovim/nvim-lspconfig'},             -- Required
+    { "rcarriga/nvim-dap-ui", dependencies = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"} },
+        { "folke/neodev.nvim", opts = {} },
+        -- Autocompletion
+        {
+            "L3MON4D3/LuaSnip",
+            version = "v2.*",
         lazy = true,
 
         dependencies = {

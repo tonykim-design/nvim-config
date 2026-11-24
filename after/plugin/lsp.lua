@@ -1,4 +1,3 @@
-local lsp = require('lspconfig')
 local lsputil = require("lspconfig/util")
 
 vim.lsp.enable({'rust_analyzer', 'ts_ls', 'pyright'})
@@ -31,40 +30,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set("i", "<C-h>", function () vim.lsp.buf.signature_help() end, opts)
     end,
 })
-
-require('lspconfig').ts_ls.setup{}
-
-require('lspconfig').lua_ls.setup({
-    capabilities = lsp_capabilities,
-    settings = {
-        Lua = {
-            runtime = {
-                version = 'LuaJIT'
-            },
-            diagnostics = {
-                globals = {'vim'},
-            },
-            workspace = {
-                library = {
-                    vim.env.VIMRUNTIME,
-                }
-            }
-        }
-    }
-})
-
-lsp.pyright.setup {
-    settings = {
-        python = {
-            analysis = {
-                -- warnings in factory boy for meta class overide
-                typeCheckingMode = "basic"
-            }
-        }
-    }
-}
-
-lsp.protols.setup{}
 
 vim.lsp.config('rust_analyzer', {
     capabilities = lsp_capabilities,
@@ -100,15 +65,8 @@ vim.diagnostic.config({
     },
 })
 
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-vim.lsp.handlers.hover,
-{border = 'rounded'}
-)
-
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-vim.lsp.handlers.signature_help,
-{border = 'rounded'}
-)
+vim.o.winborder = "rounded"
+--if you only want it for hover and signature, add it directly to attach
 
 vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 
